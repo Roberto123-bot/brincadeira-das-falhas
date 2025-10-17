@@ -48,7 +48,9 @@
 
     <script>
       // ✅ Esta linha já estava correta (Passo 5)
-      const socket = io("https://brincadeira-production.up.railway.app");
+      const socket = io(
+        "https://brincadeira-das-falhas-production.up.railway.app"
+      );
       const listaEl = document.getElementById("lista");
 
       // Atualiza a lista quando o servidor envia
@@ -72,7 +74,7 @@
         // 💡 AJUSTE FEITO AQUI:
         // Trocamos 'http://localhost:3000' pela URL do Railway
         await fetch(
-          "https://brincadeira-production.up.railway.app/combinacoes",
+          "https://brincadeira-das-falhas-production.up.railway.app/combinacoes",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
