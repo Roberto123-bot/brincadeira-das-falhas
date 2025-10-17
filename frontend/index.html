@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Combinações</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        background: #f8f8f8;
+      }
+      form {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      input,
+      button {
+        padding: 8px;
+        font-size: 16px;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        background: white;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>💡 Lista de Combinações</h1>
+
+    <form id="form">
+      <input type="text" id="nome" placeholder="Seu nome" required />
+      <input type="number" id="n1" min="1" max="60" required />
+      <input type="number" id="n2" min="1" max="60" required />
+      <input type="number" id="n3" min="1" max="60" required />
+      <button type="submit">Salvar</button>
+    </form>
+
+    <ul id="lista"></ul>
+
+    <script>
+      const socket = io("http://localhost:3000");
+      const listaEl = document.getElementById("lista");
+
+      // Atualiza a lista quando o servidor envia
+      socket.on("update", (dados) => {
+        listaEl.innerHTML = dados
+          .map(
+            (item) =>
+              `<li><strong>${item.nome}</strong>: ${item.n1}, ${item.n2}, ${item.n3}</li>`
+          )
+          .join("");
+      });
+
+      // Envia nova combinação
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nome = document.getElementById("nome").value;
+        const n1 = document.getElementById("n1").value;
+        const n2 = document.getElementById("n2").value;
+        const n3 = document.getElementById("n3").value;
+
+        await fetch("http://localhost:3000/combinacoes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, n1, n2, n3 }),
+        });
+
+        e.target.reset();
+      });
+    </script>
+  </body>
+</html>
